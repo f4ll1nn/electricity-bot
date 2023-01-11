@@ -4,7 +4,7 @@ import threading
 
 timestamp = datetime.datetime.now()
 connected = False
-
+port = 6789
 
 class EchoServerProtocol(asyncio.Protocol):
     def connection_made(self, transport):
@@ -34,7 +34,7 @@ async def main():
 
     server = await loop.create_server(
         lambda: EchoServerProtocol(),
-        '78.140.129.200', 6789)
+        '78.140.129.200', port)
 
     async with server:
         await server.serve_forever()
@@ -56,6 +56,7 @@ async def print_status():
 
 
 if __name__ == '__main__':
+    port = int(input("Enter port: "))
     thread1 = threading.Thread(target=asyncio.run, args=(check_connection(),))
     thread1.start()
     thread2 = threading.Thread(target=asyncio.run, args=(main(),))
