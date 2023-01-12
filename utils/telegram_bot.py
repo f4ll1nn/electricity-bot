@@ -1,15 +1,17 @@
 import time
 
-import telebot
+
 import zmq
 import datetime
-from .settings import TELEGRAM_TOKEN, TELEGRAM_USER_ID, LOCAL_IP
 from string import Formatter
 import telegram
 import asyncio
 
+from .settings import TELEGRAM_TOKEN, LOCAL_IP
+from .mongo_storage import MongoStorage
+
+
 bot = telegram.Bot(token=TELEGRAM_TOKEN)
-print(TELEGRAM_TOKEN, TELEGRAM_USER_ID)
 
 status = False
 passed_time = datetime.timedelta
@@ -35,32 +37,35 @@ def get_status():
     status = socket.recv_string()
     return status
 
-async def send_turn_on():
-    message = "Ура, світло включили\nСвітла не було протягом " + str_delta(int(passed_time.total_seconds()))
-    print(message)
-    return await bot.send_message(TELEGRAM_USER_ID, message)
 
-async def send_turn_off():
-    message = "Сука, світло офнули\nСвітло було протягом " + str_delta(int(passed_time.total_seconds()))
-    print(message)
-    return await bot.send_message(TELEGRAM_USER_ID, message)
+async def send_message(status):
+    ids = mongo_storage.get_ids()
+    if status == "True":
+        message = "Ура, світло включили\nСвітла не було протягом "
+    else:
+        message = "Сука, світло офнули\nСвітло було протягом "
+    for id in ids:
+        await bot.send_message(chat_id=id, text=message + str_delta(int(passed_time.total_seconds())))
+    return 0
+
 
 async def check_status():
     global status, passed_time, last_status_change_time
     status = get_status()
     while True:
         new_status = get_status()
-        if new_status!= status:
+        if new_status != status:
             passed_time = datetime.datetime.now() - last_status_change_time
             last_status_change_time = datetime.datetime.now()
             status = new_status
-            if new_status == "True":
-                await send_turn_on()
-            else:
-                await send_turn_off()
+            await send_message(status)
+
 
 def run():
+    global mongo_storage
+    mongo_storage = MongoStorage()
     asyncio.run(check_status())
+
 
 if __name__ == '__main__':
     run()

@@ -75,8 +75,8 @@ def run():
     thread1.start()
     thread2 = threading.Thread(target=asyncio.run, args=(main(),))
     thread2.start()
-    thread3 = threading.Thread(target=asyncio.run, args=(print_status(),))
-    thread3.start()
+    #thread3 = threading.Thread(target=asyncio.run, args=(print_status(),))
+    #thread3.start()
 
 
 if __name__ == '__main__':

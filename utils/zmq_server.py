@@ -11,7 +11,6 @@ def run():
     global status
     while True:
         message = socket.recv()
-        #print("Received request: %s" % message)
         if message.startswith(b"status"):
             socket.send_string(str(status))
         elif message.startswith(b"set"):

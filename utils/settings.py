@@ -1,15 +1,19 @@
-from .telegram_token import token, user_id
+from .private_settings import token, user_id, mongo_connect_string, server_ip
 LOCAL = False
+MONGO = True
 
-#IP = '127.0.0.1'
+IDS = [user_id]
+
 if LOCAL:
     IP = '127.0.0.1'
 else:
-    IP = '78.140.129.200'
+    IP = server_ip
 PORT = 6786
+
 TIMEOUT = 20
 
 LOCAL_IP = '127.0.0.1:5555'
 
 TELEGRAM_TOKEN = token
-TELEGRAM_USER_ID = user_id
+
+MONGO_CONNECT_STRING = mongo_connect_string
