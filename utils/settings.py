@@ -10,7 +10,7 @@ else:
     IP = server_ip
 PORT = 6786
 
-TIMEOUT = 20
+TIMEOUT = 120
 
 LOCAL_IP = '127.0.0.1:5555'
 

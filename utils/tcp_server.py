@@ -24,7 +24,7 @@ class EchoServerProtocol(asyncio.Protocol):
     def connection_made(self, transport):
         global connected
         peername = transport.get_extra_info('peername')
-        print('Connection from {}'.format(peername))
+        print('Connection from {}'.format(peername) + datetime.datetime.now().strftime("%H:%M:%S"))
         self.transport = transport
         connected = True
         send_status()
@@ -32,13 +32,8 @@ class EchoServerProtocol(asyncio.Protocol):
     def data_received(self, data):
         global timestamp
         message = data.decode()
-        print('Data received: {!r}'.format(message))
-
-        print('Send: {!r}'.format(message))
         self.transport.write(data)
         timestamp = datetime.datetime.now()
-
-        print('Close the client socket')
         self.transport.close()
 
 
@@ -75,8 +70,8 @@ def run():
     thread1.start()
     thread2 = threading.Thread(target=asyncio.run, args=(main(),))
     thread2.start()
-    #thread3 = threading.Thread(target=asyncio.run, args=(print_status(),))
-    #thread3.start()
+    # thread3 = threading.Thread(target=asyncio.run, args=(print_status(),))
+    # thread3.start()
 
 
 if __name__ == '__main__':

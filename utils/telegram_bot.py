@@ -40,12 +40,16 @@ def get_status():
 
 async def send_message(status):
     ids = mongo_storage.get_ids()
+    print(ids)
     if status == "True":
         message = "Ура, світло включили\nСвітла не було протягом "
     else:
         message = "Сука, світло офнули\nСвітло було протягом "
     for id in ids:
-        await bot.send_message(chat_id=id, text=message + str_delta(int(passed_time.total_seconds())))
+        try:
+            await bot.send_message(chat_id=id, text=message + str_delta(int(passed_time.total_seconds())))
+        except Exception as e:
+            print(e)
     return 0
 
 
