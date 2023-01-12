@@ -12,7 +12,7 @@ class MongoStorage:
 
     def get_ids(self):
         if MONGO:
-            return [user['user_id'] for user in self._users.find()]
+            return [user['chat_id'] for user in self._users.find()]
         else:
             return IDS
 
