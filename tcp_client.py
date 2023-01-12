@@ -1,4 +1,5 @@
 import asyncio
+from utils.settings import IP, PORT
 
 
 class EchoClientProtocol(asyncio.Protocol):
@@ -28,7 +29,7 @@ async def main():
 
     transport, protocol = await loop.create_connection(
         lambda: EchoClientProtocol(message, on_con_lost),
-        '127.0.0.1', 8888)
+        IP, PORT)
 
     # Wait until the protocol signals that the connection
     # is lost and close the transport.
